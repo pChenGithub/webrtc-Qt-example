@@ -25,6 +25,7 @@ bool PeerConductor::OnStartLogin(const std::string server, int port)
 	}
 		
 	server_ = server;
+// 调用客户端的连接到服务器
 	return client_->ConnectToServer(server,port);
 }
 

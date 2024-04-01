@@ -117,6 +117,7 @@ public:
 	std::string client_name_;
 	State state_;
 	int my_id_;
+// 对等连接回调在PeerConductor实现
 	PeerConnectionClientObserver *client_observer_;
 	render::UiObserver* UI_;
 	CRITICAL_SECTION lock;

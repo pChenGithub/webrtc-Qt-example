@@ -12,10 +12,12 @@ PeerClientUI::PeerClientUI(QWidget *parent)
 	InitializeClient();
 	initUi();
 	//message pending engines
+// 定时器循化处理消息
 	pending_timer_ = startTimer(1000);
 	is_pending_msg_ = false;
 	own_wnd_ = NULL;
 	peer_wnd_ = NULL;
+// 没有添加流
 	on_addstream_ = false;
 	peer_state_ = PeerStatus::NOT_CONNECTED;
 	peer_id_ = -1;
@@ -53,6 +55,7 @@ void PeerClientUI::OnConnect()
 	{
 		if (ui.port_lineEdit->text().toInt() > 0)
 		{
+// 登陆服务器
 			if(conductor_->
 				OnStartLogin(ui.server_lineEdit->text().toStdString(),
 				ui.port_lineEdit->text().toInt()));
@@ -82,6 +85,7 @@ void PeerClientUI::OnTalk()
 	switch (peer_state_)
 	{
 	case PeerStatus::NOT_CONNECTED:
+// 当前是挂断的，就去连接通话
 		{
 			if (!ui.peerlistView->currentIndex().isValid())
 			{
@@ -96,15 +100,20 @@ void PeerClientUI::OnTalk()
 				ASSERT(std::regex_search(peer, sm, regex_peer, std::regex_constants::match_any));
 				std::string peer_id = sm[1];
 				peer_id_ = atoi(peer_id.c_str());
+// 修改界面的通话和挂断状态
 				SetUIstatus(peer_state_);
+// 修改连接状态的连接了
 				peer_state_ = PeerStatus::CONNECTED;
+// 开启定时器
 				pending_timer_ = startTimer(3000);
+// 执行点对点连接，，，
 				conductor_->OnConnectToPeer(peer_id_);
 			}
 			break;
 		}
 
 	case PeerStatus::CONNECTED:
+// 当前是连接中的，就去挂断
 		{
 			conductor_->HangUp();
 			conductor_->OnDisconnectFromCurrentPeer();
@@ -135,6 +144,8 @@ void PeerClientUI::SetUIstatus(PeerStatus status)
 	{
 		case PeerStatus::NOT_CONNECTED:
 		{
+// 当前是未连接，下面需要去进行连接，这里修改成连接状态
+// 禁用连接服务按键和列表选择，修改通话按键为挂断
 			ui.disconnectButton->setEnabled(false);
 			ui.peerlistView->setEnabled(false);
 			ui.talkButton->setText("Hangup");
@@ -278,8 +289,11 @@ void PeerClientUI::InitializeClient() //to init peerclient and peer conductor
 {
 	ASSERT(!client_);
 	ASSERT(!conductor_.get());
+// 创建新的对等连接客户端
 	client_ = new PeerConnectionClient(this);
+// 创建新的辅助对象
 	conductor_ = new talk_base::RefCountedObject<PeerConductor>(client_, this);
+// 对等连接保存辅助对象
 	client_->client_observer_ = conductor_.get();
 }
 

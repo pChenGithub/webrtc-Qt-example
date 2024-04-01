@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 	talk_base::ThreadManager::Instance()->SetCurrentThread(&w32_thread);
 	QApplication::addLibraryPath("./plugins");
 	QApplication a(argc, argv);
+// 对等连接客户端
 	PeerClientUI w;
 	w.show();
 	return a.exec();
