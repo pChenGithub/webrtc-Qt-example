@@ -42,6 +42,7 @@ public:
 
 	// VideoRendererInterface implementation
 	virtual void SetSize(int width, int height);
+// 猜想，这个虚函数会被sdk调用，返回图片数据
 	virtual void RenderFrame(const cricket::VideoFrame* frame);
 
 	const BITMAPINFO& bmi() const { return bmi_; }

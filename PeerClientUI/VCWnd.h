@@ -11,10 +11,12 @@ namespace render
 }
 namespace render
 {
+// 现实视频的窗口
 	class VCWnd :
 		public QMainWindow
 	{
 	public:
+// 主UI，是否本地
 		explicit VCWnd(render::UiObserver* UI, bool islocal);
 		~VCWnd();
 	protected:
@@ -25,6 +27,7 @@ namespace render
 		void RemoteFrameRenderer();
 		bool is_local_;
 		static QPoint wnd_location_;
+// 主UI
 		render::UiObserver* UI_;
 	};
 }

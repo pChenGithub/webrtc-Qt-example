@@ -45,9 +45,11 @@ public:
 	void RegisterObserver();
 	void UnRegisterObserver();
 	QTcpSocket* tcp_socket_;
+// SocketCallback 是peerconnectionclient的对象
 	SocketCallback *asyc_socket_;
 	bool quit_;
 private slots :
+// 发送后socket可读，调用 peerconnectionclient的 OnRead
 	void OnreadyRead(){ asyc_socket_->OnRead(this); }
 	void Onerror(QAbstractSocket::SocketError){};
 	void Onconnected()

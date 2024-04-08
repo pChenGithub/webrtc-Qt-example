@@ -78,12 +78,15 @@ private:
 	int pending_timer_;
 	
 private slots:
-// 连接
+// 用户消息
+// 连接，按键触发
 	void OnConnect();
-// 断开连接
+// 断开连接,按键触发
 	void OnDisconnect();
+// 按键触发通话
 	void OnTalk();
 	void OnClear();
+// 双击触发通话
 	void OnListClicked(const QModelIndex &index);
 };
 

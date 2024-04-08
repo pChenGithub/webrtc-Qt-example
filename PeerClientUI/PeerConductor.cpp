@@ -31,6 +31,7 @@ bool PeerConductor::OnStartLogin(const std::string server, int port)
 
 void PeerConductor::OnSignedIn()
 {
+// 这里切换界面，应该是从服务连接的界面切换到，设备列表的界面
 	UI_->ui.stackedWidget->setCurrentIndex(1);
 	client_->state_ = PeerConnectionClient::State::SIGNED_IN;
 	UI_->log(render::UiObserver::NORMAL, new QString("suecceed to sign in."), true);
@@ -219,15 +220,18 @@ void PeerConductor::AddStreams() {
 	}
 		
 
+// 初始化音频流,工厂创建一个音频轨，创建一个音频源，参数是NULL
 	talk_base::scoped_refptr<webrtc::AudioTrackInterface> audio_track(
 		peer_connection_factory_->CreateAudioTrack(
 		kAudioLabel, peer_connection_factory_->CreateAudioSource(NULL)));
 
+// 初始化视频轨，工厂创建一个音频轨，创建一个视频源，参数是创建的摄像头采集对象
 	talk_base::scoped_refptr<webrtc::VideoTrackInterface> video_track(
 		peer_connection_factory_->CreateVideoTrack(
 		kVideoLabel,
 		peer_connection_factory_->CreateVideoSource(OpenVideoCaptureDevice(),
 		NULL)));
+// 启动本地流
 	UI_->StartLocalRenderer(video_track);
 
 	talk_base::scoped_refptr<webrtc::MediaStreamInterface> stream =
@@ -235,10 +239,14 @@ void PeerConductor::AddStreams() {
 
 	stream->AddTrack(audio_track);
 	stream->AddTrack(video_track);
+// 保存音频轨
 	audio_track_ = audio_track.get();
+// 保存视频轨
 	video_track_ = video_track.get();
+// 保存流
 	stream_ = stream;
 	UI_->log(UI_->NORMAL, new QString("audio and video streams added."), true);
+// 添加流到对等连接
 	if (!peer_connection_->AddStream(stream, NULL)) {
 		//err
 		UI_->log(render::UiObserver::ERRORS, new QString("streams addition failed."), true);

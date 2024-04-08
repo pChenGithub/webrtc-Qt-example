@@ -100,13 +100,16 @@ bool PeerConnectionClient::DoConnect()
 void PeerConnectionClient::OnConnect(QAsySocket* socket)
 {
 	ASSERT(!onconnect_data_.empty());
+// control_socket连接之后，接着把登陆请求发出去
 	size_t sent = socket->Send(onconnect_data_.c_str(), onconnect_data_.length());
 	ASSERT(sent == onconnect_data_.length());
 	UNUSED(sent);
+// 发送完后清理缓存
 	onconnect_data_.clear();
 }
 
 
+// 这里是监听服务端的下发消息
 void PeerConnectionClient::OnRead(QAsySocket* socket)
 {
 	EnterCriticalSection(&lock);

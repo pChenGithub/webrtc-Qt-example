@@ -47,6 +47,7 @@ void VideoRenderer::RenderFrame(const cricket::VideoFrame* frame)
 		AutoLock<VideoRenderer> lock(this);
 
 		ASSERT(image_.get() != NULL);
+// 读取到的图片数据转成rgb的QImage
 		frame->ConvertToRgbBuffer(cricket::FOURCC_ARGB,
 			image_.get(),
 			bmi_.bmiHeader.biSizeImage,

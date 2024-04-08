@@ -48,6 +48,7 @@ void render::VCWnd::closeEvent(QCloseEvent* event)
 
 void render::VCWnd::paintEvent(QPaintEvent* event)
 {
+// 根据是不同的流调用不同的接口
 	if (!is_local_)
 		RemoteFrameRenderer();
 	else
@@ -56,6 +57,7 @@ void render::VCWnd::paintEvent(QPaintEvent* event)
 
 void render::VCWnd::LocalFrameRenderer()
 {
+// 从主UI获取到VideoRenderer
 	VideoRenderer* local_renderer = UI_->local_renderer_.get();
 	if (local_renderer)
 	{
@@ -64,6 +66,7 @@ void render::VCWnd::LocalFrameRenderer()
 		int height = abs(bmi.bmiHeader.biHeight);
 		int width = bmi.bmiHeader.biWidth;
 
+// 拿到图片数据
 		const uint8* image = local_renderer->image();
 		if (image != NULL)
 		{

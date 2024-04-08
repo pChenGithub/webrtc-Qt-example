@@ -17,7 +17,7 @@ PeerClientUI::PeerClientUI(QWidget *parent)
 	is_pending_msg_ = false;
 	own_wnd_ = NULL;
 	peer_wnd_ = NULL;
-// 没有添加流
+// on_addstream_ 远程流启动的标记
 	on_addstream_ = false;
 	peer_state_ = PeerStatus::NOT_CONNECTED;
 	peer_id_ = -1;
@@ -82,6 +82,7 @@ void PeerClientUI::OnConnect()
 void PeerClientUI::OnTalk()
 {
 	
+// 区分当前状态
 	switch (peer_state_)
 	{
 	case PeerStatus::NOT_CONNECTED:
@@ -187,6 +188,7 @@ void PeerClientUI::StartLocalRenderer(webrtc::VideoTrackInterface* local_video)
 	ASSERT(!own_wnd_);
 	own_wnd_ = new render::VCWnd(this, true);
 	own_wnd_->show();
+// 使用视频轨创建视频接收器，视频轨来自 peerconnectionclient，，创建的视频轨
 	local_renderer_.reset(new VideoRenderer(own_wnd_, 1, 1, local_video));
 	log(NORMAL, new QString("started local renderer."), true);
 }
@@ -239,7 +241,9 @@ void  PeerClientUI::timerEvent(QTimerEvent *event)
 	{
 		if (on_addstream_)
 		{
+// 定时会刷新远端视频显示
 			StartRemoteRenderer(remote_video);
+// 启动之后修改成false
 			on_addstream_ = false;
 		}
 		if (!is_pending_msg_&&!pending_messages_.empty())
